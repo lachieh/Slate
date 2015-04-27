@@ -1,0 +1,218 @@
+vagrantfile:
+    target: local
+    vm:
+        box: puphpet/ubuntu1404-x64
+        box_url: puphpet/ubuntu1404-x64
+        hostname: slate.dev
+        memory: '512'
+        cpus: '1'
+        chosen_provider: virtualbox
+        network:
+            private_network: 192.168.56.101
+            forwarded_port:
+                vflnp_idf4y4opcuqw:
+                    host: '5400'
+                    guest: '22'
+        post_up_message: ''
+        provider:
+            virtualbox:
+                modifyvm:
+                    natdnshostresolver1: on
+            vmware:
+                numvcpus: 1
+            parallels:
+                cpus: 1
+        provision:
+            puppet:
+                manifests_path: puphpet/puppet
+                manifest_file: site.pp
+                module_path: puphpet/puppet/modules
+                options:
+                    - '--verbose'
+                    - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
+                    - '--parser future'
+        synced_folder:
+            vflsf_a39ilrm4949k:
+                source: ./app
+                target: /var/www/app
+                sync_type: default
+                rsync:
+                    args:
+                        - '--verbose'
+                        - '--archive'
+                        - '-z'
+                    exclude:
+                        - .vagrant/
+                        - .git/
+                    auto: 'true'
+                owner: www-data
+                group: www-data
+        usable_port_range:
+            start: 10200
+            stop: 10500
+    ssh:
+        host: null
+        port: null
+        private_key_path: null
+        username: vagrant
+        guest_port: null
+        keep_alive: true
+        forward_agent: false
+        forward_x11: false
+        shell: 'bash -l'
+    vagrant:
+        host: detect
+server:
+    install: '1'
+    packages: {  }
+users_groups:
+    install: '1'
+    groups: {  }
+    users: {  }
+firewall:
+    install: '1'
+    rules: {  }
+cron:
+    install: '1'
+    jobs: {  }
+nginx:
+    install: '1'
+    settings:
+        default_vhost: 1
+        proxy_buffer_size: 128k
+        proxy_buffers: '4 256k'
+    upstreams: {  }
+    vhosts:
+        nxv_gc75id6w0lrf:
+            server_name: slate.dev
+            server_aliases:
+                - www.slate.dev
+            www_root: /var/www/app
+            listen_port: '80'
+            index_files:
+                - index.html
+                - index.htm
+                - index.php
+            client_max_body_size: 128m
+            ssl: '0'
+            ssl_cert: ''
+            ssl_key: ''
+            ssl_port: '443'
+            rewrite_to_https: '1'
+            spdy: '1'
+            locations:
+                nxvl_cpqteazwe3gq:
+                    location: /
+                    autoindex: off
+                    try_files:
+                        - $uri
+                        - $uri/
+                        - /index.php$is_args$args
+                    fastcgi: ''
+                    fastcgi_index: ''
+                    fastcgi_split_path: ''
+                nxvl_0relnsyqqnry:
+                    location: '~ \.php$'
+                    autoindex: off
+                    try_files:
+                        - $uri
+                        - $uri/
+                        - /index.php$is_args$args
+                    fastcgi: '127.0.0.1:9000'
+                    fastcgi_index: index.php
+                    fastcgi_split_path: '^(.+\.php)(/.*)$'
+                    fast_cgi_params_extra:
+                        - 'SCRIPT_FILENAME $request_filename'
+                        - 'APP_ENV dev'
+    proxies: {  }
+php:
+    install: '1'
+    settings:
+        version: '56'
+    modules:
+        php:
+            - cli
+            - intl
+            - mcrypt
+        pear: {  }
+        pecl:
+            - pecl_http
+    ini:
+        display_errors: On
+        error_reporting: '-1'
+        session.save_path: /var/lib/php/session
+        date.timezone: UTC
+    fpm_ini:
+        error_log: /var/log/php-fpm.log
+    fpm_pools:
+        phpfp_pvw1yalrsnay:
+            ini:
+                prefix: www
+                listen: '127.0.0.1:9000'
+                security.limit_extensions: .php
+                user: www-user
+                group: www-data
+    composer: '1'
+    composer_home: ''
+mysql:
+    install: '1'
+    settings:
+        version: '5.6'
+        root_password: '123'
+        override_options: {  }
+    adminer: '0'
+    users:
+        mysqlnu_h2uaiq2e72u5:
+            name: wp_slate
+            password: wp_slate
+    databases:
+        mysqlnd_lrj415nmm9ot:
+            name: wp_slate
+            sql: ''
+    grants:
+        mysqlng_syjkbmybpid4:
+            user: wp_slate
+            table: '*.*'
+            privileges:
+                - ALL
+wpcli:
+    install: '1'
+    version: v0.19.0
+ruby:
+    install: '1'
+    versions: {  }
+python:
+    install: '1'
+    packages: {  }
+    versions: {  }
+# Don't need this stuff, but it has to remain in the config file.
+apache:
+    install: '0'
+xdebug:
+    install: '0'
+xhprof:
+    install: '0'
+drush:
+    install: '0'
+nodejs:
+    install: '0'
+hhvm:
+    install: '0'
+postgresql:
+    install: '0'
+mongodb:
+    install: '0'
+redis:
+    install: '0'
+sqlite:
+    install: '0'
+mailcatcher:
+    install: '0'
+beanstalkd:
+    install: '0'
+rabbitmq:
+    install: '0'
+elastic_search:
+    install: '0'
+solr:
+    install: '0'
